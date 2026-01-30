@@ -6,14 +6,13 @@ async function bootstrap() {
 
   app.enableCors({
     origin: 'http://localhost:3000', 
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     credentials: true,
   });
 
+  app.setGlobalPrefix('api');
 
-  await app.listen(3001, '0.0.0.0'); 
+  await app.listen(8080, '0.0.0.0'); 
   
-  console.log(`🚀 BFF Server ready at: http://localhost:3001`);
-  console.log(`📡 WebSocket Gateway should be active on the same port`);
+  console.log(`🚀 Server ready at: http://localhost:8080/api`);
 }
 bootstrap();

@@ -1,5 +1,6 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Sse, MessageEvent } from '@nestjs/common';
 import { RankingService } from './ranking.service';
+import { map, Observable } from 'rxjs';
 
 @Controller('ranking')
 export class RankingController {
@@ -8,5 +9,14 @@ export class RankingController {
   @Get()
   getRanking() {
     return this.rankingService.getAll();
+  }
+
+  @Sse('events')
+  sendRankingEvents(): Observable<MessageEvent> {
+    return this.rankingService.getRankingObservable().pipe(
+      map((rankings) => ({
+        data: rankings,
+      }) as MessageEvent)
+    );
   }
 }
