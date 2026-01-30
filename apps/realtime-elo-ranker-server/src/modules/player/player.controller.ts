@@ -6,7 +6,8 @@ export class PlayerController {
   constructor(private readonly rankingService: RankingService) {}
 
   @Post()
-  create(@Body('id') id: string) {
-    return this.rankingService.create(id);
+  async create(@Body() body: { id: string }) {
+    console.log('Requête reçue pour créer :', body);
+    return this.rankingService.create(body.id);
   }
 }

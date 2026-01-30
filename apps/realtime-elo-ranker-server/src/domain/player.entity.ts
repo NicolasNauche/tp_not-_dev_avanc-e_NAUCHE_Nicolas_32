@@ -4,7 +4,6 @@ export class Player {
     public rank: number
   ) {}
 
-  
   updateRank(newRank: number) {
     this.rank = newRank;
   }

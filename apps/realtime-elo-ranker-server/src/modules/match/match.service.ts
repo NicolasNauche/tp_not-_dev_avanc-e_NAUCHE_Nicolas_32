@@ -10,18 +10,15 @@ export class MatchService {
     private readonly gateway: RankingGateway
   ) {}
 
-  processMatch(player1Id: string, player2Id: string, result: number) {
-    const p1 = this.rankingService.getById(player1Id);
-    const p2 = this.rankingService.getById(player2Id);
+  processMatch(p1Id: string, p2Id: string, result: number) {
+    const p1 = this.rankingService.getById(p1Id);
+    const p2 = this.rankingService.getById(p2Id);
 
-    const expectedP1 = Elo.calculateExpectedScore(p1.rank, p2.rank);
-    const expectedP2 = Elo.calculateExpectedScore(p2.rank, p1.rank);
+    const exp1 = Elo.calculateExpectedScore(p1.rank, p2.rank);
+    const exp2 = Elo.calculateExpectedScore(p2.rank, p1.rank);
 
-    const newRankP1 = Elo.calculateNewRank(p1.rank, expectedP1, result);
-    const newRankP2 = Elo.calculateNewRank(p2.rank, expectedP2, 1 - result);
-
-    p1.updateRank(newRankP1);
-    p2.updateRank(newRankP2);
+    p1.updateRank(Elo.calculateNewRank(p1.rank, exp1, result));
+    p2.updateRank(Elo.calculateNewRank(p2.rank, exp2, 1 - result));
 
     this.gateway.sendUpdate(p1);
     this.gateway.sendUpdate(p2);

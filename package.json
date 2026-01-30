@@ -1,11 +1,8 @@
 {
   "name": "realtime-elo-ranker",
   "version": "1.0.1",
-  "description": "",
-  "keywords": [],
-  "author": "",
-  "license": "UNLICENSED",
   "scripts": {
+    "apps:server:dev": "pnpm run --filter ./apps/realtime-elo-ranker-server start:dev",
     "apps:client:dev": "pnpm run --filter ./apps/realtime-elo-ranker-client dev",
     "apps:api-mock:start": "pnpm run --filter ./apps/realtime-elo-ranker-api-mock start",
     "libs:ui:build": "pnpm run --filter ./libs/ui build",

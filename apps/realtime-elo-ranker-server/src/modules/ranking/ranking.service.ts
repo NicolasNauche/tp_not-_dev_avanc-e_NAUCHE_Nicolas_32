@@ -16,11 +16,10 @@ export class RankingService {
   }
 
   create(id: string): Player {
-    const playersArr = Array.from(this.players.values());
-    
+    const playersArr = this.getAll();
     const averageRank = playersArr.length > 0 
       ? Math.round(playersArr.reduce((sum, p) => sum + p.rank, 0) / playersArr.length)
-      : 1200; 
+      : 1200;
     
     const newPlayer = new Player(id, averageRank);
     this.players.set(id, newPlayer);

@@ -6,12 +6,9 @@ export class RankingGateway {
   @WebSocketServer()
   server: Server;
 
-  sendUpdate(player: { id: string; rank: number }) {
+  sendUpdate(player: any) {
     this.server.emit('RankingUpdate', {
-      player: {
-        id: player.id,
-        rank: player.rank
-      }
+      player: { id: player.id, rank: player.rank }
     });
   }
 }
