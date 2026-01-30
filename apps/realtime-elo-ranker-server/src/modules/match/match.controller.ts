@@ -6,7 +6,12 @@ export class MatchController {
   constructor(private readonly matchService: MatchService) {}
 
   @Post()
-  addResult(@Body() body: { player1Id: string, player2Id: string, result: number }) {
-    return this.matchService.processMatch(body.player1Id, body.player2Id, body.result);
+  addResult(@Body() body: { winner: string, loser: string, draw: boolean }) {
+  
+    const player1Id = body.winner;
+    const player2Id = body.loser;
+    const result = body.draw ? 0.5 : 1;
+
+    return this.matchService.processMatch(player1Id, player2Id, result);
   }
 }
