@@ -1,3 +1,4 @@
+
 import { Injectable } from '@nestjs/common';
 import { RankingService } from '../ranking/ranking.service';
 import { RankingGateway } from '../ranking/ranking.gateway';
@@ -19,6 +20,10 @@ export class MatchService {
 
     p1.updateRank(Elo.calculateNewRank(p1.rank, exp1, result));
     p2.updateRank(Elo.calculateNewRank(p2.rank, exp2, 1 - result));
+
+
+    this.rankingService.notifyUpdate(p1);
+    this.rankingService.notifyUpdate(p2);
 
     this.gateway.sendUpdate(p1);
     this.gateway.sendUpdate(p2);

@@ -1,11 +1,14 @@
+
 import { Injectable } from '@nestjs/common';
 import { Player } from '../../domain/player.entity';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs'; 
 
 @Injectable()
 export class RankingService {
   private players: Map<string, Player> = new Map();
   private rankingSubject = new BehaviorSubject<Player[]>([]);
+  
+  private playerUpdateSubject = new Subject<Player>();
 
   getAll(): Player[] {
     return Array.from(this.players.values()).sort((a, b) => b.rank - a.rank);
@@ -23,6 +26,15 @@ export class RankingService {
     return this.rankingSubject.asObservable();
   }
 
+  getPlayerUpdateObservable(): Observable<Player> {
+    return this.playerUpdateSubject.asObservable();
+  }
+
+  notifyUpdate(player: Player) {
+    this.playerUpdateSubject.next(player);
+    this.rankingSubject.next(this.getAll());
+  }
+
   create(id: string): Player {
     const playersArr = this.getAll();
     const averageRank = playersArr.length > 0 
@@ -32,7 +44,7 @@ export class RankingService {
     const newPlayer = new Player(id, averageRank);
     this.players.set(id, newPlayer);
     
-    this.rankingSubject.next(this.getAll());
+    this.notifyUpdate(newPlayer);
     
     return newPlayer;
   }
