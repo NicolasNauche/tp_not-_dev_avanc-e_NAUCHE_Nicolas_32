@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { Player } from '../../domain/player.entity';
 import { BehaviorSubject, Observable } from 'rxjs';
 
@@ -9,6 +9,14 @@ export class RankingService {
 
   getAll(): Player[] {
     return Array.from(this.players.values()).sort((a, b) => b.rank - a.rank);
+  }
+
+  getById(id: string): Player {
+    const player = this.players.get(id);
+    if (!player) {
+      throw new Error(`Player with id ${id} not found`);
+    }
+    return player;
   }
 
   getRankingObservable(): Observable<Player[]> {
@@ -28,5 +36,4 @@ export class RankingService {
     
     return newPlayer;
   }
-  
 }

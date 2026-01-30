@@ -1,6 +1,7 @@
+
 import { Controller, Get, Sse, MessageEvent } from '@nestjs/common';
 import { RankingService } from './ranking.service';
-import { map, Observable } from 'rxjs';
+import { map, Observable, filter } from 'rxjs'; 
 
 @Controller('ranking')
 export class RankingController {
@@ -14,9 +15,17 @@ export class RankingController {
   @Sse('events')
   sendRankingEvents(): Observable<MessageEvent> {
     return this.rankingService.getRankingObservable().pipe(
-      map((rankings) => ({
-        data: rankings,
-      }) as MessageEvent)
+      filter(players => players.length > 0),
+      map((players) => {
+        const lastPlayer = players[players.length - 1];
+
+        return {
+          data: {
+            type: 'RankingUpdate',
+            player: { id: lastPlayer.id, rank: lastPlayer.rank },
+          },
+        } as MessageEvent;
+      })
     );
   }
 }
