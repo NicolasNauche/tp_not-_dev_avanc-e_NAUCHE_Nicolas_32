@@ -1,4 +1,3 @@
-
 import { Injectable } from '@nestjs/common';
 import { RankingService } from '../ranking/ranking.service';
 import { RankingGateway } from '../ranking/ranking.gateway';
@@ -11,7 +10,7 @@ export class MatchService {
     private readonly gateway: RankingGateway
   ) {}
 
-  processMatch(p1Id: string, p2Id: string, result: number) {
+  async processMatch(p1Id: string, p2Id: string, result: number) {
     const p1 = this.rankingService.getById(p1Id);
     const p2 = this.rankingService.getById(p2Id);
 
@@ -23,9 +22,11 @@ export class MatchService {
 
 
     this.rankingService.notifyUpdate(p1);
-    this.rankingService.notifyUpdate(p2);
-
     this.gateway.sendUpdate(p1);
+
+    await new Promise(resolve => setTimeout(resolve, 100));
+
+    this.rankingService.notifyUpdate(p2);
     this.gateway.sendUpdate(p2);
 
     return [p1, p2];
